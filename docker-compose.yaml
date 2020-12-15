@@ -1,0 +1,52 @@
+#To be used only when developing the keycloak image
+version: "3.8"
+
+services:
+
+  db:
+    container_name: "mysql-keycloak-dev"
+    image: "mysql:5.7"
+    ports: 
+      - "5000:3306"
+    volumes:
+      - "mysql-data-keycloak-dev:/var/lib/mysql"
+    environment: 
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+    networks: 
+      - backend
+    restart: always
+
+  # Exporting doesn't work unless DEBUG mode is disabled.
+  keycloak:
+    container_name: "keycloak-dev"
+    depends_on: 
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: "keycloak-dev:latest"
+    volumes:
+    - "./realm-config:/opt/jboss/keycloak/imports" #Get exports in your local filesystem immediately
+    ports:
+      - "8787:8787"
+      - "8001:8080"
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_ADDR: mysql-keycloak-dev
+      DB_VENDOR: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DEBUG: "true"
+      DEBUG_PORT: "*:8787"
+    networks: 
+      - backend
+    restart: always
+
+volumes:
+  mysql-data-keycloak-dev:
+
+networks: 
+  backend:
