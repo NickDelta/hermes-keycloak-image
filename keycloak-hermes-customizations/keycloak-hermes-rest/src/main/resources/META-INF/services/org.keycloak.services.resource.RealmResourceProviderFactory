@@ -1,1 +1,1 @@
-org.hua.hermes.keycloak.rest.CustomRestResourceProviderFactory
+org.hua.hermes.keycloak.rest.OrganizationsResourceProviderFactory

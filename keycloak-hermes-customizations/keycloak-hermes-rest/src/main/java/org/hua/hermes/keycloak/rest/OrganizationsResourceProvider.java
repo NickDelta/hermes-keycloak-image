@@ -17,35 +17,23 @@
 
 package org.hua.hermes.keycloak.rest;
 
-import org.keycloak.Config.Scope;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.services.resource.RealmResourceProvider;
-import org.keycloak.services.resource.RealmResourceProviderFactory;
 
 /**
  * @author <a href="mailto:nikosdelta@protonmail.com">Nick Dimitrakopoulos</a>
  */
-public class CustomRestResourceProviderFactory implements RealmResourceProviderFactory {
+public class OrganizationsResourceProvider implements RealmResourceProvider {
 
-    public static final String ID = "custom";
+    private final KeycloakSession session;
 
-    @Override
-    public String getId() {
-        return ID;
+    public OrganizationsResourceProvider(KeycloakSession session) {
+        this.session = session;
     }
 
     @Override
-    public RealmResourceProvider create(KeycloakSession session) {
-        return new CustomRestResourceProvider(session);
-    }
-
-    @Override
-    public void init(Scope config) {
-    }
-
-    @Override
-    public void postInit(KeycloakSessionFactory factory) {
+    public Object getResource() {
+        return new OrganizationsResource(session);
     }
 
     @Override
