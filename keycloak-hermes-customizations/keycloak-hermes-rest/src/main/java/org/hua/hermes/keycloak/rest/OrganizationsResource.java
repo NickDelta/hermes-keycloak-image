@@ -144,7 +144,7 @@ public class OrganizationsResource
 
         GroupRepresentation childRep = ModelToRepresentation.toGroupHierarchy(orgGroup, true);
 
-        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(childRep).build();
+        return Response.status(201).type(MediaType.APPLICATION_JSON_TYPE).entity(childRep).build();
     }
 
     protected AdminAuth authenticateRealmAdminRequest(HttpHeaders headers) {
