@@ -15,25 +15,26 @@
  * limitations under the License.
  */
 
-package org.hua.hermes.keycloak.rest;
+package org.hua.hermes.keycloak.rest.citizens;
 
+import org.hua.hermes.keycloak.rest.organizations.OrganizationsResource;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.resource.RealmResourceProvider;
 
 /**
  * @author <a href="mailto:nikosdelta@protonmail.com">Nick Dimitrakopoulos</a>
  */
-public class OrganizationsResourceProvider implements RealmResourceProvider {
+public class CitizensResourceProvider implements RealmResourceProvider {
 
     private final KeycloakSession session;
 
-    public OrganizationsResourceProvider(KeycloakSession session) {
+    public CitizensResourceProvider(KeycloakSession session) {
         this.session = session;
     }
 
     @Override
     public Object getResource() {
-        return new OrganizationsResource(session);
+        return new CitizensResource(session);
     }
 
     @Override

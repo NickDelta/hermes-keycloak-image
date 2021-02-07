@@ -1,1 +1,2 @@
-org.hua.hermes.keycloak.rest.OrganizationsResourceProviderFactory
+org.hua.hermes.keycloak.rest.organizations.OrganizationsResourceProviderFactory
+org.hua.hermes.keycloak.rest.citizens.CitizensResourceProviderFactory

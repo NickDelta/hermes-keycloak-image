@@ -1,4 +1,4 @@
-package org.hua.hermes.keycloak.rest;
+package org.hua.hermes.keycloak.rest.organizations;
 
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.keycloak.models.GroupModel;

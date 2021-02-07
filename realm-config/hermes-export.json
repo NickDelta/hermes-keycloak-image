@@ -6,7 +6,7 @@
   "notBefore" : 0,
   "revokeRefreshToken" : false,
   "refreshTokenMaxReuse" : 0,
-  "accessTokenLifespan" : 86400,
+  "accessTokenLifespan" : 600,
   "accessTokenLifespanForImplicitFlow" : 900,
   "ssoSessionIdleTimeout" : 1800,
   "ssoSessionMaxLifespan" : 36000,
@@ -28,17 +28,17 @@
   "sslRequired" : "none",
   "registrationAllowed" : false,
   "registrationEmailAsUsername" : false,
-  "rememberMe" : false,
+  "rememberMe" : true,
   "verifyEmail" : false,
-  "loginWithEmailAllowed" : true,
+  "loginWithEmailAllowed" : false,
   "duplicateEmailsAllowed" : false,
-  "resetPasswordAllowed" : false,
+  "resetPasswordAllowed" : true,
   "editUsernameAllowed" : false,
-  "bruteForceProtected" : false,
+  "bruteForceProtected" : true,
   "permanentLockout" : false,
-  "maxFailureWaitSeconds" : 900,
+  "maxFailureWaitSeconds" : 1800,
   "minimumQuickLoginWaitSeconds" : 60,
-  "waitIncrementSeconds" : 60,
+  "waitIncrementSeconds" : 300,
   "quickLoginCheckMilliSeconds" : 1000,
   "maxDeltaTimeSeconds" : 43200,
   "failureFactor" : 30,
@@ -265,7 +265,14 @@
       } ],
       "security-admin-console" : [ ],
       "admin-cli" : [ ],
-      "internal-frontend" : [ ],
+      "internal-frontend" : [ {
+        "id" : "f9eacef4-13f6-4825-a802-fa7ca572c81b",
+        "name" : "uma_protection",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "381ef46d-b091-46c8-a018-d66393fa92c8",
+        "attributes" : { }
+      } ],
       "backend" : [ ],
       "account-console" : [ ],
       "broker" : [ {
@@ -363,15 +370,15 @@
     "clientRoles" : { },
     "subGroups" : [ {
       "id" : "69d91277-13ee-42b5-8aee-f02365a1f610",
-      "name" : "HUA",
-      "path" : "/ORGANIZATIONS/HUA",
+      "name" : "OAED",
+      "path" : "/ORGANIZATIONS/OAED",
       "attributes" : { },
       "realmRoles" : [ ],
       "clientRoles" : { },
       "subGroups" : [ {
         "id" : "943c5115-0bd6-4c6e-815e-22dc567a084f",
         "name" : "EMPLOYEES",
-        "path" : "/ORGANIZATIONS/HUA/EMPLOYEES",
+        "path" : "/ORGANIZATIONS/OAED/EMPLOYEES",
         "attributes" : { },
         "realmRoles" : [ "ROLE_ORG_EMPLOYEE" ],
         "clientRoles" : { },
@@ -379,7 +386,7 @@
       }, {
         "id" : "d3d09453-ac1a-45f6-bf97-2e80526d3e99",
         "name" : "SUPERVISORS",
-        "path" : "/ORGANIZATIONS/HUA/SUPERVISORS",
+        "path" : "/ORGANIZATIONS/OAED/SUPERVISORS",
         "attributes" : { },
         "realmRoles" : [ "ROLE_ORG_SUPERVISOR" ],
         "clientRoles" : { },
@@ -397,6 +404,7 @@
   } ],
   "defaultRoles" : [ "offline_access", "uma_authorization" ],
   "requiredCredentials" : [ "password" ],
+  "passwordPolicy" : "notEmail(undefined) and notUsername(undefined)",
   "otpPolicyType" : "totp",
   "otpPolicyAlgorithm" : "HmacSHA1",
   "otpPolicyInitialCounter" : 0,
@@ -433,7 +441,7 @@
     "emailVerified" : true,
     "firstName" : "Nikolaos",
     "lastName" : "Dimitrakopoulos",
-    "email" : "example@mail.com",
+    "email" : "nikos@mail.com",
     "attributes" : {
       "street_address" : [ "Spring Lane 69" ],
       "country" : [ "Greece" ],
@@ -660,6 +668,7 @@
     "description" : "The external front-end of Hermes.",
     "rootUrl" : "http://localhost:8083",
     "adminUrl" : "http://localhost:8083",
+    "baseUrl" : "http://localhost:8083",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
@@ -679,7 +688,6 @@
     "protocol" : "openid-connect",
     "attributes" : {
       "saml.assertion.signature" : "false",
-      "access.token.lifespan" : "86400",
       "saml.force.post.binding" : "false",
       "saml.multivalued.roles" : "false",
       "saml.encrypt" : "false",
@@ -696,24 +704,12 @@
       "display.on.consent.screen" : "false",
       "saml.onetimeuse.condition" : "false"
     },
-    "authenticationFlowBindingOverrides" : { },
+    "authenticationFlowBindingOverrides" : {
+      "browser" : "0a04fb72-1d5d-4fca-bb1f-65ff8fab0bec"
+    },
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
     "protocolMappers" : [ {
-      "id" : "365a3927-536f-448a-8020-bcef9b703c40",
-      "name" : "birthdate",
-      "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-usermodel-attribute-mapper",
-      "consentRequired" : false,
-      "config" : {
-        "userinfo.token.claim" : "true",
-        "user.attribute" : "birthdate",
-        "id.token.claim" : "true",
-        "access.token.claim" : "true",
-        "claim.name" : "birthdate",
-        "jsonType.label" : "String"
-      }
-    }, {
       "id" : "1fac1351-390c-425b-9501-97e4af013bb5",
       "name" : "organization-groups-mapper",
       "protocol" : "openid-connect",
@@ -725,23 +721,6 @@
         "access.token.claim" : "true",
         "claim.name" : "groups",
         "userinfo.token.claim" : "true"
-      }
-    }, {
-      "id" : "13bece2c-f070-4b7d-8fcb-a93ef236c6f9",
-      "name" : "address",
-      "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-address-mapper",
-      "consentRequired" : false,
-      "config" : {
-        "user.attribute.formatted" : "formatted",
-        "user.attribute.country" : "country",
-        "user.attribute.postal_code" : "postal_code",
-        "userinfo.token.claim" : "true",
-        "user.attribute.street" : "street",
-        "id.token.claim" : "true",
-        "user.attribute.region" : "region",
-        "access.token.claim" : "true",
-        "user.attribute.locality" : "locality"
       }
     }, {
       "id" : "3c4c26b8-48c9-481e-9899-d85e2299c0ea",
@@ -756,44 +735,17 @@
         "claim.name" : "organizations",
         "userinfo.token.claim" : "true"
       }
-    }, {
-      "id" : "50dfcdd9-43a7-4c8e-a7f1-0e5c3aa23afe",
-      "name" : "phone number",
-      "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-usermodel-attribute-mapper",
-      "consentRequired" : false,
-      "config" : {
-        "userinfo.token.claim" : "true",
-        "user.attribute" : "phone_number",
-        "id.token.claim" : "true",
-        "access.token.claim" : "true",
-        "claim.name" : "phone_number",
-        "jsonType.label" : "String"
-      }
-    }, {
-      "id" : "fcf4683f-6603-4d69-bd43-aa5df02c50b2",
-      "name" : "gender",
-      "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-usermodel-attribute-mapper",
-      "consentRequired" : false,
-      "config" : {
-        "userinfo.token.claim" : "true",
-        "user.attribute" : "gender",
-        "id.token.claim" : "true",
-        "access.token.claim" : "true",
-        "claim.name" : "gender",
-        "jsonType.label" : "String"
-      }
     } ],
     "defaultClientScopes" : [ "web-origins", "role_list", "roles", "profile", "email" ],
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
   }, {
     "id" : "381ef46d-b091-46c8-a018-d66393fa92c8",
     "clientId" : "internal-frontend",
-    "name" : "Hermes Internal Front-End",
-    "description" : "The internal front-end of Hermes.",
+    "name" : "Hermes Internal System",
+    "description" : "The internal system of Hermes",
     "rootUrl" : "http://localhost:8082",
     "adminUrl" : "http://localhost:8082",
+    "baseUrl" : "http://localhost:8082",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
@@ -808,12 +760,11 @@
     "implicitFlowEnabled" : false,
     "directAccessGrantsEnabled" : false,
     "serviceAccountsEnabled" : false,
-    "publicClient" : true,
+    "publicClient" : false,
     "frontchannelLogout" : false,
     "protocol" : "openid-connect",
     "attributes" : {
       "saml.assertion.signature" : "false",
-      "access.token.lifespan" : "86400",
       "saml.force.post.binding" : "false",
       "saml.multivalued.roles" : "false",
       "saml.encrypt" : "false",
@@ -830,55 +781,12 @@
       "display.on.consent.screen" : "false",
       "saml.onetimeuse.condition" : "false"
     },
-    "authenticationFlowBindingOverrides" : { },
+    "authenticationFlowBindingOverrides" : {
+      "browser" : "0a04fb72-1d5d-4fca-bb1f-65ff8fab0bec"
+    },
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
     "protocolMappers" : [ {
-      "id" : "6970a0f4-e0ab-4f3a-9712-fa78f9211be9",
-      "name" : "address",
-      "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-address-mapper",
-      "consentRequired" : false,
-      "config" : {
-        "user.attribute.formatted" : "formatted",
-        "user.attribute.country" : "country",
-        "user.attribute.postal_code" : "postal_code",
-        "userinfo.token.claim" : "true",
-        "user.attribute.street" : "street",
-        "id.token.claim" : "true",
-        "user.attribute.region" : "region",
-        "access.token.claim" : "true",
-        "user.attribute.locality" : "locality"
-      }
-    }, {
-      "id" : "72fc69f5-1c74-4295-bb70-949e447131a4",
-      "name" : "birthdate",
-      "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-usermodel-attribute-mapper",
-      "consentRequired" : false,
-      "config" : {
-        "userinfo.token.claim" : "true",
-        "user.attribute" : "birthdate",
-        "id.token.claim" : "true",
-        "access.token.claim" : "true",
-        "claim.name" : "birthdate",
-        "jsonType.label" : "String"
-      }
-    }, {
-      "id" : "4041db48-79cb-4e06-9f61-83e3025e04aa",
-      "name" : "phone number",
-      "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-usermodel-attribute-mapper",
-      "consentRequired" : false,
-      "config" : {
-        "userinfo.token.claim" : "true",
-        "user.attribute" : "phone_number",
-        "id.token.claim" : "true",
-        "access.token.claim" : "true",
-        "claim.name" : "phone_number",
-        "jsonType.label" : "String"
-      }
-    }, {
       "id" : "c951ffc0-4783-4135-bd6a-44e9daa1298d",
       "name" : "organization-groups-mapper",
       "protocol" : "openid-connect",
@@ -890,20 +798,6 @@
         "access.token.claim" : "true",
         "claim.name" : "groups",
         "userinfo.token.claim" : "true"
-      }
-    }, {
-      "id" : "7eaccbb6-b4c1-4dfd-a517-4b349f7d90b8",
-      "name" : "gender",
-      "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-usermodel-attribute-mapper",
-      "consentRequired" : false,
-      "config" : {
-        "userinfo.token.claim" : "true",
-        "user.attribute" : "gender",
-        "id.token.claim" : "true",
-        "access.token.claim" : "true",
-        "claim.name" : "gender",
-        "jsonType.label" : "String"
       }
     }, {
       "id" : "d024cf2c-043c-469d-a4be-6259fef2c24e",
@@ -1535,11 +1429,11 @@
     "strictTransportSecurity" : "max-age=31536000; includeSubDomains"
   },
   "smtpServer" : { },
-  "eventsEnabled" : false,
+  "eventsEnabled" : true,
   "eventsListeners" : [ "jboss-logging" ],
-  "enabledEventTypes" : [ ],
-  "adminEventsEnabled" : false,
-  "adminEventsDetailsEnabled" : false,
+  "enabledEventTypes" : [ "SEND_RESET_PASSWORD", "UPDATE_CONSENT_ERROR", "GRANT_CONSENT", "REMOVE_TOTP", "REVOKE_GRANT", "UPDATE_TOTP", "LOGIN_ERROR", "CLIENT_LOGIN", "RESET_PASSWORD_ERROR", "IMPERSONATE_ERROR", "CODE_TO_TOKEN_ERROR", "CUSTOM_REQUIRED_ACTION", "RESTART_AUTHENTICATION", "IMPERSONATE", "UPDATE_PROFILE_ERROR", "LOGIN", "UPDATE_PASSWORD_ERROR", "CLIENT_INITIATED_ACCOUNT_LINKING", "TOKEN_EXCHANGE", "LOGOUT", "REGISTER", "DELETE_ACCOUNT_ERROR", "CLIENT_REGISTER", "IDENTITY_PROVIDER_LINK_ACCOUNT", "DELETE_ACCOUNT", "UPDATE_PASSWORD", "CLIENT_DELETE", "FEDERATED_IDENTITY_LINK_ERROR", "IDENTITY_PROVIDER_FIRST_LOGIN", "CLIENT_DELETE_ERROR", "VERIFY_EMAIL", "CLIENT_LOGIN_ERROR", "RESTART_AUTHENTICATION_ERROR", "EXECUTE_ACTIONS", "REMOVE_FEDERATED_IDENTITY_ERROR", "TOKEN_EXCHANGE_ERROR", "PERMISSION_TOKEN", "SEND_IDENTITY_PROVIDER_LINK_ERROR", "EXECUTE_ACTION_TOKEN_ERROR", "SEND_VERIFY_EMAIL", "EXECUTE_ACTIONS_ERROR", "REMOVE_FEDERATED_IDENTITY", "IDENTITY_PROVIDER_POST_LOGIN", "IDENTITY_PROVIDER_LINK_ACCOUNT_ERROR", "UPDATE_EMAIL", "REGISTER_ERROR", "REVOKE_GRANT_ERROR", "EXECUTE_ACTION_TOKEN", "LOGOUT_ERROR", "UPDATE_EMAIL_ERROR", "CLIENT_UPDATE_ERROR", "UPDATE_PROFILE", "CLIENT_REGISTER_ERROR", "FEDERATED_IDENTITY_LINK", "SEND_IDENTITY_PROVIDER_LINK", "SEND_VERIFY_EMAIL_ERROR", "RESET_PASSWORD", "CLIENT_INITIATED_ACCOUNT_LINKING_ERROR", "UPDATE_CONSENT", "REMOVE_TOTP_ERROR", "VERIFY_EMAIL_ERROR", "SEND_RESET_PASSWORD_ERROR", "CLIENT_UPDATE", "CUSTOM_REQUIRED_ACTION_ERROR", "IDENTITY_PROVIDER_POST_LOGIN_ERROR", "UPDATE_TOTP_ERROR", "CODE_TO_TOKEN", "GRANT_CONSENT_ERROR", "IDENTITY_PROVIDER_FIRST_LOGIN_ERROR" ],
+  "adminEventsEnabled" : true,
+  "adminEventsDetailsEnabled" : true,
   "identityProviders" : [ ],
   "identityProviderMappers" : [ ],
   "components" : {
@@ -1568,7 +1462,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "saml-role-list-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-role-list-mapper", "oidc-address-mapper", "oidc-full-name-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-property-mapper", "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper" ]
       }
     }, {
       "id" : "4c465ba2-cb15-4ff4-a2ab-bf9d0dab5daf",
@@ -1600,7 +1494,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-usermodel-property-mapper", "saml-role-list-mapper", "saml-user-property-mapper", "oidc-address-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-full-name-mapper", "saml-user-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "oidc-full-name-mapper", "oidc-address-mapper", "oidc-usermodel-attribute-mapper", "saml-role-list-mapper" ]
       }
     }, {
       "id" : "523a722d-9681-4280-ad33-36d69e46da1d",
@@ -1649,7 +1543,7 @@
   "internationalizationEnabled" : false,
   "supportedLocales" : [ ],
   "authenticationFlows" : [ {
-    "id" : "f2b1b34a-6bc1-4dde-87be-6e774e1ded17",
+    "id" : "16fa73c4-9266-4305-bb1f-7e5d35515c42",
     "alias" : "Account verification options",
     "description" : "Method with which to verity the existing account",
     "providerId" : "basic-flow",
@@ -1669,7 +1563,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "0cc9880a-1b87-45b0-9dab-317c8cb03d28",
+    "id" : "9db4ad60-4130-4aeb-a171-2b7a6f7bdbf4",
     "alias" : "Authentication Options",
     "description" : "Authentication options.",
     "providerId" : "basic-flow",
@@ -1695,7 +1589,7 @@
       "autheticatorFlow" : false
     } ]
   }, {
-    "id" : "00512245-4621-4f2a-8ef6-eca13f59301b",
+    "id" : "15cc338e-cf5d-4f97-98bf-87f00ff68ae5",
     "alias" : "Browser - Conditional OTP",
     "description" : "Flow to determine if the OTP is required for the authentication",
     "providerId" : "basic-flow",
@@ -1715,7 +1609,7 @@
       "autheticatorFlow" : false
     } ]
   }, {
-    "id" : "32541d9a-6502-4cff-bf3a-36e1a611d84f",
+    "id" : "f31d8f17-b52a-4342-b4c5-0f6a6886700a",
     "alias" : "Direct Grant - Conditional OTP",
     "description" : "Flow to determine if the OTP is required for the authentication",
     "providerId" : "basic-flow",
@@ -1735,7 +1629,7 @@
       "autheticatorFlow" : false
     } ]
   }, {
-    "id" : "fbeb312b-e4cf-4d01-ad23-79f053e52dc8",
+    "id" : "336f714f-f247-4674-a3be-26bffef8d1d3",
     "alias" : "First broker login - Conditional OTP",
     "description" : "Flow to determine if the OTP is required for the authentication",
     "providerId" : "basic-flow",
@@ -1755,7 +1649,7 @@
       "autheticatorFlow" : false
     } ]
   }, {
-    "id" : "49a2136b-d4a1-49a0-8c1d-23d670641a92",
+    "id" : "b4acdc84-a22f-4286-9601-8a6aa39a3814",
     "alias" : "Handle Existing Account",
     "description" : "Handle what to do if there is existing account with same email/username like authenticated identity provider",
     "providerId" : "basic-flow",
@@ -1775,7 +1669,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "b2ad0de0-9225-4292-8b7a-1e25b0ae2a88",
+    "id" : "e9191e71-1667-4e62-94bd-4bbd6987f0e4",
     "alias" : "Reset - Conditional OTP",
     "description" : "Flow to determine if the OTP should be reset or not. Set to REQUIRED to force.",
     "providerId" : "basic-flow",
@@ -1795,7 +1689,7 @@
       "autheticatorFlow" : false
     } ]
   }, {
-    "id" : "a27eecd4-39d1-41ee-bc07-38e1bff39339",
+    "id" : "bfe2cd28-066d-49dc-ab26-c4a92429a09a",
     "alias" : "User creation or linking",
     "description" : "Flow for the existing/non-existing user alternatives",
     "providerId" : "basic-flow",
@@ -1816,7 +1710,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "9513c7f2-48fd-4b16-81bd-32e68fb02c79",
+    "id" : "a5f9abe0-b515-4aaf-8b99-2a37921e8282",
     "alias" : "Verify Existing Account by Re-authentication",
     "description" : "Reauthentication of existing account",
     "providerId" : "basic-flow",
@@ -1836,7 +1730,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "2bea24b1-ca7c-4b57-82f0-31f4a4ab7a2a",
+    "id" : "0a04fb72-1d5d-4fca-bb1f-65ff8fab0bec",
     "alias" : "browser",
     "description" : "browser based authentication",
     "providerId" : "basic-flow",
@@ -1868,7 +1762,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "192b17bd-a3b1-4246-8305-92e8731da441",
+    "id" : "5ab63774-76cd-4f95-b1d3-af384b3809ed",
     "alias" : "clients",
     "description" : "Base authentication for clients",
     "providerId" : "client-flow",
@@ -1900,7 +1794,7 @@
       "autheticatorFlow" : false
     } ]
   }, {
-    "id" : "b8a1a036-496f-4e02-b812-33bc1c9efb9c",
+    "id" : "582cb50b-1f09-4c2b-8776-a5cc5315709d",
     "alias" : "direct grant",
     "description" : "OpenID Connect Resource Owner Grant",
     "providerId" : "basic-flow",
@@ -1926,7 +1820,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "8a7a1e54-a9fb-440e-9003-2eaf0701c6d1",
+    "id" : "17908524-e96b-4fd3-b7ad-6a30da72f956",
     "alias" : "docker auth",
     "description" : "Used by Docker clients to authenticate against the IDP",
     "providerId" : "basic-flow",
@@ -1940,7 +1834,7 @@
       "autheticatorFlow" : false
     } ]
   }, {
-    "id" : "05bb3e60-99e9-4a56-8b47-a2a5834beeaf",
+    "id" : "f848a916-ba42-4724-b51c-319097f3f4cf",
     "alias" : "first broker login",
     "description" : "Actions taken after first broker login with identity provider account, which is not yet linked to any Keycloak account",
     "providerId" : "basic-flow",
@@ -1961,7 +1855,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "14c92042-b318-44a1-9835-7fa4dad0b160",
+    "id" : "e082879b-97c9-4b89-86b6-35b359cc12a3",
     "alias" : "forms",
     "description" : "Username, password, otp and other auth forms.",
     "providerId" : "basic-flow",
@@ -1981,7 +1875,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "249adb57-d4e9-4399-8d3e-c757cfccdcea",
+    "id" : "e12a7318-e1f3-4a22-9954-7d911d7b9f0d",
     "alias" : "http challenge",
     "description" : "An authentication flow based on challenge-response HTTP Authentication Schemes",
     "providerId" : "basic-flow",
@@ -2001,7 +1895,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "bdb501e4-b79e-429d-94e2-91f1c56411dc",
+    "id" : "ad0cbb79-2496-4513-89f0-a4a20d96e911",
     "alias" : "registration",
     "description" : "registration flow",
     "providerId" : "basic-flow",
@@ -2016,7 +1910,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "c665d6de-46e7-4e61-ad65-36f799af4471",
+    "id" : "0fa32218-d5f0-46fa-a310-6b84528f9b65",
     "alias" : "registration form",
     "description" : "registration form",
     "providerId" : "form-flow",
@@ -2048,7 +1942,7 @@
       "autheticatorFlow" : false
     } ]
   }, {
-    "id" : "a3f89987-37b3-4d4d-a623-cbbba74e3ae6",
+    "id" : "75db7618-8b67-40a6-96b4-55e2c6b45b42",
     "alias" : "reset credentials",
     "description" : "Reset credentials for a user if they forgot their password or something",
     "providerId" : "basic-flow",
@@ -2080,7 +1974,7 @@
       "autheticatorFlow" : true
     } ]
   }, {
-    "id" : "3acf1740-1324-43e0-848d-5ea420ea7d41",
+    "id" : "83d60e6d-5e99-463e-a46e-e0d330c05615",
     "alias" : "saml ecp",
     "description" : "SAML ECP Profile Authentication Flow",
     "providerId" : "basic-flow",
@@ -2095,13 +1989,13 @@
     } ]
   } ],
   "authenticatorConfig" : [ {
-    "id" : "561d3125-9ec8-4fc6-b93d-b08734786e1e",
+    "id" : "29f9c0a9-4254-42bc-9b32-40925292d11d",
     "alias" : "create unique user config",
     "config" : {
       "require.password.update.after.registration" : "false"
     }
   }, {
-    "id" : "11862da0-6bb4-4dd5-aa5d-e34d6cd9feed",
+    "id" : "60c65175-3cd3-4614-a4e2-6781ba90b79e",
     "alias" : "review profile config",
     "config" : {
       "update.profile.on.first.login" : "missing"
@@ -2159,7 +2053,7 @@
     "alias" : "update_user_locale",
     "name" : "Update User Locale",
     "providerId" : "update_user_locale",
-    "enabled" : true,
+    "enabled" : false,
     "defaultAction" : false,
     "priority" : 1000,
     "config" : { }
@@ -2176,6 +2070,6 @@
     "clientSessionMaxLifespan" : "0",
     "clientOfflineSessionIdleTimeout" : "0"
   },
-  "keycloakVersion" : "12.0.1",
+  "keycloakVersion" : "12.0.2",
   "userManagedAccessAllowed" : false
 }

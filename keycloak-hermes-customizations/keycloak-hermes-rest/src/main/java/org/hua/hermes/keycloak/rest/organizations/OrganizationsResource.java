@@ -1,4 +1,4 @@
-package org.hua.hermes.keycloak.rest;
+package org.hua.hermes.keycloak.rest.organizations;
 
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.keycloak.common.ClientConnection;
@@ -54,7 +54,6 @@ public class OrganizationsResource
         this.adminEvent = new AdminEventBuilder(realm, adminAuth, session, clientConnection);
         this.organizationsGroup = findOrganizationsGroup();
     }
-
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
