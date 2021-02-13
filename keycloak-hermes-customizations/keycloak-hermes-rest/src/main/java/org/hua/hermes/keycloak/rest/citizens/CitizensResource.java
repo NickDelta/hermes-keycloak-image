@@ -1,5 +1,6 @@
 package org.hua.hermes.keycloak.rest.citizens;
 
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.keycloak.common.ClientConnection;
 import org.keycloak.connections.jpa.JpaConnectionProvider;
 import org.keycloak.jose.jws.JWSInput;
@@ -16,6 +17,7 @@ import org.keycloak.services.managers.RealmManager;
 import org.keycloak.services.resources.admin.AdminAuth;
 import org.keycloak.services.resources.admin.AdminEventBuilder;
 import org.keycloak.services.resources.admin.GroupResource;
+import org.keycloak.services.resources.admin.UserResource;
 import org.keycloak.services.resources.admin.permissions.AdminPermissionEvaluator;
 import org.keycloak.services.resources.admin.permissions.AdminPermissions;
 
@@ -79,6 +81,21 @@ public class CitizensResource
         groupIds.add(citizensGroup.getId());
 
         return userProvider.getUsersCount(realm, groupIds);
+    }
+
+    @Path("/{id}")
+    public UserResource citizen(@PathParam("id") String id) {
+        auth.groups().requireManage();
+
+        UserModel citizen = session.users()
+                .getGroupMembersStream(realm,citizensGroup)
+                .filter(userModel -> userModel.getId().equals(id))
+                .findFirst()
+                .orElseThrow(NotFoundException::new);
+
+        UserResource resource = new UserResource(realm,citizen,auth,adminEvent);
+        ResteasyProviderFactory.getInstance().injectProperties(resource);
+        return resource;
     }
 
     protected AdminAuth authenticateRealmAdminRequest(HttpHeaders headers) {
