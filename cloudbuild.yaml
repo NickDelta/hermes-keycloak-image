@@ -2,9 +2,9 @@ steps:
   - name: 'gcr.io/cloud-builders/mvn'
     args: [ '-f', 'keycloak-hermes-customizations', 'package' ]
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/keycloak-dev:latest', '.']
+    args: [ 'build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:latest', '.']
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/keycloak-dev:$SHORT_SHA', '.']
+    args: [ 'build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:$SHORT_SHA', '.']
 images:
-  - 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/keycloak-dev:latest'
-  - 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/keycloak-dev:$SHORT_SHA'
+  - 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:latest'
+  - 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:$SHORT_SHA'

@@ -4,10 +4,10 @@ version: "3.8"
 services:
 
   db:
-    container_name: "mysql-keycloak-dev"
+    container_name: "keycloak-db-dev"
     image: "mysql:5.7"
     ports: 
-      - "5000:3306"
+      - "5001:3306"
     volumes:
       - "mysql-data:/var/lib/mysql"
     environment: 
@@ -15,8 +15,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: keycloak
     networks: 
-      - backend
-    restart: always
+      - keycloak
+    restart: unless-stopped
 
   # Exporting doesn't work unless DEBUG mode is disabled.
   keycloak:
@@ -30,23 +30,26 @@ services:
     volumes:
     - "./realm-config:/opt/jboss/keycloak/imports" #Get exports in your local filesystem immediately
     ports:
-      - "8787:8787"
       - "8001:8080"
+      - "8443:8443"
+      - "8787:8787"
+    # Override CMD to get local env config
+    command: ["-b 0.0.0.0", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/opt/jboss/keycloak/imports/hermes-export-dev.json", "-Dkeycloak.migration.strategy=IGNORE_EXISTING"]
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
-      DB_ADDR: mysql-keycloak-dev
+      DB_ADDR: keycloak-db-dev
       DB_VENDOR: mysql
       DB_USER: root
       DB_PASSWORD: root
-      DEBUG: "true"
+      DEBUG: "false"
       DEBUG_PORT: "*:8787"
     networks: 
-      - backend
-    restart: always
+      - keycloak
+    restart: unless-stopped
 
 volumes:
   mysql-data:
 
-networks: 
-  backend:
+networks:
+  keycloak:
