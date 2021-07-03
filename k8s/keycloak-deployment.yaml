@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hermes
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - env:
+            - name: DB_ADDR
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db.ip
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db.password
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db.user
+            - name: DB_VENDOR
+              value: mysql
+            - name: KEYCLOAK_USER
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-env-secret
+                  key: admin.username
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-env-secret
+                  key: admin.password
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
+          image: europe-west2-docker.pkg.dev/hua-hermes/keycloak/prod
+          name: hermes-keycloak
+          ports:
+            - containerPort: 8080
+            - containerPort: 8443
+          readinessProbe:
+            httpGet:
+              path: /auth/realms/master
+              port: 8080
+          resources: {}
+      restartPolicy: Always

@@ -1,4 +1,5 @@
 #To be used only when developing the keycloak image
+
 version: "3.8"
 
 services:
@@ -31,10 +32,10 @@ services:
     - "./realm-config:/opt/jboss/keycloak/imports" #Get exports in your local filesystem immediately
     ports:
       - "8001:8080"
-      - "8443:8443"
+      - "9990:9990"
       - "8787:8787"
     # Override CMD to get local env config
-    command: ["-b 0.0.0.0", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/opt/jboss/keycloak/imports/hermes-export-dev.json", "-Dkeycloak.migration.strategy=IGNORE_EXISTING"]
+    command: ["-b 0.0.0.0", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/opt/jboss/keycloak/imports/hermes-export.json", "-Dkeycloak.migration.strategy=IGNORE_EXISTING"]
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
@@ -42,7 +43,7 @@ services:
       DB_VENDOR: mysql
       DB_USER: root
       DB_PASSWORD: root
-      DEBUG: "false"
+      DEBUG: "true"
       DEBUG_PORT: "*:8787"
     networks: 
       - keycloak

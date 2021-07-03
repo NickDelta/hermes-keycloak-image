@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # See https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#backend-protocol
+    nginx.ingress.kubernetes.io/backend-protocol: "https"
+  namespace: hermes
+spec:
+  tls:
+    - secretName: secret-tls
+  rules:
+    - host: "sso.hermesapp.xyz"
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            path: "/"
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8443

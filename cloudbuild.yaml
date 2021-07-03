@@ -5,6 +5,14 @@ steps:
     args: [ 'build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:latest', '.']
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:$SHORT_SHA', '.']
-images:
-  - 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:latest'
-  - 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:$SHORT_SHA'
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:latest' ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:$SHORT_SHA' ]
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+      - run
+      - --filename=k8s
+      - --image=europe-west2-docker.pkg.dev/$PROJECT_ID/keycloak/prod:$SHORT_SHA
+      - --location=europe-west2-c
+      - --cluster=hermes-cluster

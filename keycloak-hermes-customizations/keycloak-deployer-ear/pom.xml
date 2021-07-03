@@ -5,7 +5,7 @@
     <parent>
         <artifactId>keycloak-hermes-parent</artifactId>
         <groupId>org.hua</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <name>Keycloak EAR Deployer</name>
@@ -29,7 +29,6 @@
 
     <build>
         <finalName>hermes-customizations</finalName>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
